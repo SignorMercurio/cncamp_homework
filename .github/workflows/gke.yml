@@ -67,7 +67,7 @@ jobs:
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
-      # Deploy sample image to the GKE cluster
+      # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
           kubectl apply -f deployment.yml
