@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -10,14 +11,16 @@ import (
 func NewServer(addr string) error {
 	requestHandler := func(ctx *fasthttp.RequestCtx) {
 		switch string(ctx.Path()) {
-		case "/reqHdr":
+		case "/header":
 			injectResquestHeaders(ctx)
-		case "/getEnv":
+		case "/version":
 			getEnv(ctx)
 		case "/log":
 			writeLog(ctx)
 		case "/healthz":
 			healthCheck(ctx)
+		case "/":
+			welcome(ctx)
 		default:
 			ctx.Error("Path not found", fasthttp.StatusNotFound)
 		}
@@ -44,10 +47,22 @@ func getEnv(ctx *fasthttp.RequestCtx) {
 }
 
 func writeLog(ctx *fasthttp.RequestCtx) {
-	log.Printf("IP: %s; Status: %d\n", ctx.RemoteAddr().String(), ctx.Response.StatusCode())
-	ctx.Response.SetBody([]byte(`This access attempt has been logged.`))
+	l := fmt.Sprintf("IP: %s; Status: %d\n", ctx.RemoteAddr().String(), ctx.Response.StatusCode())
+	log.Println(l)
+	ctx.Response.SetBody([]byte(l))
 }
 
 func healthCheck(ctx *fasthttp.RequestCtx) {
 	ctx.Response.SetBody([]byte("Awesome"))
+}
+
+func welcome(ctx *fasthttp.RequestCtx) {
+	ctx.Response.SetBody([]byte(`
+	Welcome to cncamp_homework HTTP Server:
+	
+	- Access /header to find your Request Headers in the Response Headers
+	- Access /version to get the VERSION environment variable
+	- Access /log to write logs in the server
+	- Access /healthz for a health check
+	`))
 }

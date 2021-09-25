@@ -11,5 +11,11 @@ func main() {
 	if len(os.Args) != 2 {
 		log.Fatalf("Usage: %s [listen address]", os.Args[0])
 	}
+	setEnv()
+
 	log.Fatal(httpserver.NewServer(os.Args[1]))
+}
+
+func setEnv() {
+	os.Setenv("VERSION", "1.0.2")
 }
