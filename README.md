@@ -21,6 +21,8 @@ A simple HTTP server that you may:
 - Running `gcloud --quiet auth configure-docker` requires the service account to have the permission to create bucket. `Storage Admin` role works, but it's clearly not the least
   privilege you can grant.
 - You'll need `Kubernetes Engine Developer` role for your service account.
+- `secrets.GKE_PROJECT`: GKE's Project ID
+- `secrets.GKE_SA_KEY`: Base64 encoded JSON key of your service account
 
 ### Things to modify for a different golang app
 
