@@ -62,7 +62,7 @@ jobs:
             --build-arg GITHUB_REF="$GITHUB_REF" \
             .
 
-      # Push the Docker image to Google Container Registry
+      # Push the Docker image to Google Container Registry, maybe need storage admin role?
       - name: Publish
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
