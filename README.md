@@ -8,7 +8,7 @@ A simple HTTP server that you may:
 - Access `/header` to find your Request Headers in the Response Headers
 - Access `/version` to get the VERSION environment variable
 - Access `/log` to write logs in the server
-- Access `/healthz` for a healch check
+- Access `/healthz` for a health check
 
 ### Note for Dockerfile
 
