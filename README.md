@@ -1,6 +1,7 @@
 # cncamp_homework
 
-## httpserver
+<details>
+<summary>httpserver</summary>
 
 A simple HTTP server that you may:
 
@@ -15,6 +16,8 @@ A simple HTTP server that you may:
 - In order to build images for other platform, you may find [buildx](https://docs.docker.com/buildx/working-with-buildx/) helpful.
 - OR, you may also make use of GitHub Actions to avoid the issue.
 - When using `alpine` as the base image to run a go binary, `CGO_ENABLED=0` must be set when building due to a different libc implementation on `alpine`. Replacing the dynamic link library also helps.
+
+> Docker image: gcr.io/blissful-sun-325617/httpserver:97c0a48ba886460159acd8740c93a33d72c48bee
 
 ### Note for Google Cloud Platform
 
@@ -33,3 +36,5 @@ A simple HTTP server that you may:
 - (Optional) `kustomization.yml` to include other `.yml` representing Kubernetes resources
 - `env` in `.github/workflows/gke.yml`
 - `secrets.GKE_PROJECT` and `secrets.GKE_SA_KEY` in `.github/workflows/gke.yml`
+
+</detail>
