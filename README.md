@@ -52,13 +52,13 @@ $ ./httpserver :8000
 <details>
 <summary>2️⃣ Docker </summary>
 
-See [Dockerfile](Dockerfile).
+> See [Dockerfile](Dockerfile).
 
 </details>
 
 <details>
 <summary>3️⃣ Kubernetes </summary>
 
-🚧 In progress
+## 🚧 In progress
 
 </details>
