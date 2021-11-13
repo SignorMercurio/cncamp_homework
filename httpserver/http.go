@@ -11,7 +11,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func NewServer(addr string) error {
+var (
+	welcome_msg = `
+	Welcome to cncamp_homework HTTP Server:
+
+	- Access /header to find your Request Headers in the Response Headers
+	- Access /version to get the VERSION environment variable
+	- Access /log to write logs in the server
+	- Access /healthz for a health check
+	`
+	not_found_msg = "Path not found"
+)
+
+func NewServer(addr string) *http.Server {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/header", injectResquestHeaders)
@@ -23,7 +35,10 @@ func NewServer(addr string) error {
 
 	log.Printf("Listening on %s...", addr)
 
-	return http.ListenAndServe(addr, r)
+	return &http.Server{
+		Addr:    addr,
+		Handler: r,
+	}
 }
 
 func injectResquestHeaders(w http.ResponseWriter, r *http.Request) {
@@ -53,17 +68,10 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func welcome(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(`
-	Welcome to cncamp_homework HTTP Server:
-
-	- Access /header to find your Request Headers in the Response Headers
-	- Access /version to get the VERSION environment variable
-	- Access /log to write logs in the server
-	- Access /healthz for a health check
-	`))
+	w.Write([]byte(welcome_msg))
 }
 
 func catchAll(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("Path not found"))
+	w.Write([]byte(not_found_msg))
 }
