@@ -17,5 +17,5 @@ func main() {
 }
 
 func setEnv() {
-	os.Setenv("VERSION", "1.0.2")
+	os.Setenv("VERSION", "1.1.0")
 }

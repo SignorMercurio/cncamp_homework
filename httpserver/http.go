@@ -3,66 +3,67 @@ package httpserver
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"strings"
+	"time"
 
-	"github.com/valyala/fasthttp"
+	"github.com/gorilla/mux"
 )
 
 func NewServer(addr string) error {
-	requestHandler := func(ctx *fasthttp.RequestCtx) {
-		switch string(ctx.Path()) {
-		case "/header":
-			injectResquestHeaders(ctx)
-		case "/version":
-			getEnv(ctx)
-		case "/log":
-			writeLog(ctx)
-		case "/healthz":
-			healthCheck(ctx)
-		case "/":
-			welcome(ctx)
-		default:
-			ctx.Error("Path not found", fasthttp.StatusNotFound)
-		}
-	}
+	r := mux.NewRouter()
+
+	r.HandleFunc("/header", injectResquestHeaders)
+	r.HandleFunc("/version", getEnv)
+	r.HandleFunc("/log", writeLog)
+	r.HandleFunc("/healthz", healthCheck)
+	r.HandleFunc("/", welcome)
+	r.PathPrefix("/").HandlerFunc(catchAll)
+
 	log.Printf("Listening on %s...", addr)
 
-	return fasthttp.ListenAndServe(addr, requestHandler)
+	return http.ListenAndServe(addr, r)
 }
 
-func injectResquestHeaders(ctx *fasthttp.RequestCtx) {
-	ctx.Request.Header.VisitAll(func(key, value []byte) {
-		ctx.Response.Header.Set("X-"+string(key), string(value))
-	})
-	ctx.Response.SetBody([]byte(`Check the Request Headers in Responses Headers (those with the "X" prefix)`))
+func injectResquestHeaders(w http.ResponseWriter, r *http.Request) {
+	for key, value := range r.Header {
+		w.Header().Set("X-"+key, strings.Join(value, "; "))
+	}
+	w.Write([]byte(`Check the Request Headers in Responses Headers (those with the "X" prefix)`))
 }
 
-func getEnv(ctx *fasthttp.RequestCtx) {
+func getEnv(w http.ResponseWriter, r *http.Request) {
 	v := os.Getenv("VERSION")
 	if v == "" {
 		v = "0.0.0"
 	}
-	ctx.Response.Header.Set("X-Version", v)
-	ctx.Response.SetBody([]byte(`Check the version in Response Headers`))
+	w.Header().Set("X-Version", v)
+	w.Write([]byte(`Check the version in Response Headers`))
 }
 
-func writeLog(ctx *fasthttp.RequestCtx) {
-	l := fmt.Sprintf("IP: %s; Status: %d\n", ctx.RemoteAddr().String(), ctx.Response.StatusCode())
+func writeLog(w http.ResponseWriter, r *http.Request) {
+	l := fmt.Sprintf("Time: %s; IP: %s; Status: %d\n", time.Now().Format(time.UnixDate), r.RemoteAddr, http.StatusOK)
 	log.Println(l)
-	ctx.Response.SetBody([]byte(l))
+	w.Write([]byte(l))
 }
 
-func healthCheck(ctx *fasthttp.RequestCtx) {
-	ctx.Response.SetBody([]byte("Awesome"))
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Awesome"))
 }
 
-func welcome(ctx *fasthttp.RequestCtx) {
-	ctx.Response.SetBody([]byte(`
+func welcome(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(`
 	Welcome to cncamp_homework HTTP Server:
-	
+
 	- Access /header to find your Request Headers in the Response Headers
 	- Access /version to get the VERSION environment variable
 	- Access /log to write logs in the server
 	- Access /healthz for a health check
 	`))
+}
+
+func catchAll(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	w.Write([]byte("Path not found"))
 }

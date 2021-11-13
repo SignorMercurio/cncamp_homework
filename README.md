@@ -12,6 +12,14 @@ A simple HTTP server that you may:
 - Access `/log` to write logs in the server
 - Access `/healthz` for a health check
 
+### Sample usage
+
+Start a server on `0.0.0.0:8000`:
+
+```shell
+$ ./httpserver :8000
+```
+
 ### Note for Dockerfile
 
 - When using Apple M1 to play with docker, it pulls and builds images for linux/arm/v8 platform by default.
