@@ -33,9 +33,17 @@ spec:
     spec:
       containers:
         - name: httpserver
-          image: gcr.io/PROJECT_ID/IMAGE:TAG
+          image: server # gcr.io/PROJECT_ID/IMAGE:TAG
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          readinessProbe: # no need for livenessProbe
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
           resources:
             requests:
               cpu: 100m

@@ -14,7 +14,7 @@ func main() {
 	if len(os.Args) != 2 {
 		log.Fatalf("Usage: %s [listen address]", os.Args[0])
 	}
-	setEnv()
+	os.Setenv("VERSION", "1.2.0")
 
 	srv := httpserver.NewServer(os.Args[1])
 	go func() {
@@ -23,6 +23,7 @@ func main() {
 		}
 	}()
 
+	// Graceful termination
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
@@ -33,8 +34,4 @@ func main() {
 
 	srv.Shutdown(ctx)
 	log.Println("Shutting down...")
-}
-
-func setEnv() {
-	os.Setenv("VERSION", "1.1.0")
 }

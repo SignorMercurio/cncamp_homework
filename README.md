@@ -30,8 +30,6 @@ $ ./httpserver :8000
 - OR, you may also make use of GitHub Actions to avoid the issue.
 - When using `alpine` as the base image to run a go binary, `CGO_ENABLED=0` must be set when building due to a different libc implementation on `alpine`. Replacing the dynamic link library also helps.
 
-> Docker image: gcr.io/blissful-sun-325617/httpserver:97c0a48ba886460159acd8740c93a33d72c48bee
-
 ### Note for Google Cloud Platform
 
 - Running `gcloud --quiet auth configure-docker` requires the service account to have the permission to create bucket. `Storage Admin` role works, but it's clearly not the least
@@ -44,8 +42,7 @@ $ ./httpserver :8000
 
 - Target binary name in `Dockerfile`
 - Entry command in `Dockerfile`
-- Everywhere `httpserver` appears in `deployment.yml`
-- (Optional) A `service.yml` when things get complicated
+- Everywhere `httpserver` appears in `template.yml`
 - (Optional) `kustomization.yml` to include other `.yml` representing Kubernetes resources
 - `env` in `.github/workflows/gke.yml`
 - `secrets.GKE_PROJECT` and `secrets.GKE_SA_KEY` in `.github/workflows/gke.yml`
@@ -55,6 +52,10 @@ $ ./httpserver :8000
 <details>
 <summary><img src="https://img.shields.io/badge/HW02-Docker-2496ed?logo=docker" /></summary>
 
+## Docker
+
+Build a multi-stage docker image for httpserver.
+
 > See [Dockerfile](Dockerfile).
 
 </details>
@@ -62,6 +63,27 @@ $ ./httpserver :8000
 <details>
 <summary><img src="https://img.shields.io/badge/HW03-Kubernetes-326ce5?logo=kubernetes" /></summary>
 
-## 🚧 In progress
+## Kubernetes
+
+Deploy httpserver on Kubernetes. Based on the first homework, I choose to deploy it on Google Kubernetes Engine.
+
+### Changes in httpserver
+
+- Deprecate `valyala/fasthttp`, use `net/http` and `gorilla/mux`
+- Add unit tests, coverage 100%
+- CI / CD with GitHub Actions
+  - CI: Codecov
+  - CD: Deploy to GKE
+- Add graceful termination when receiving SIGTERM
+
+### Features \| 🚧 In construction
+
+- [x] Add resource limit and request
+- [x] Add readiness probe
+- [x] <del>Add liveness probe</del> No need for liveness probe
+- [x] Add graceful termination (see httpserver source code)
+- [ ] Add graceful initialization with postStart
+- [ ] Add configurations with ConfigMap
+- [ ] Add support for leveled logging
 
 </details>
