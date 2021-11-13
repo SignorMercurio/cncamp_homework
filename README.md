@@ -4,7 +4,7 @@
 <a href="https://codecov.io/gh/SignorMercurio/limner"><img src="https://codecov.io/gh/SignorMercurio/limner/branch/main/graph/badge.svg?token=PKWZK3BR9R"/></a>
 
 <details>
-<summary>1️⃣ httpserver</summary>
+<summary><img src="https://img.shields.io/badge/HW01-httpserver-4285f4?logo=google-chrome" /></summary>
 
 ## httpserver
 
@@ -53,14 +53,14 @@ $ ./httpserver :8000
 </details>
 
 <details>
-<summary>2️⃣ Docker </summary>
+<summary><img src="https://img.shields.io/badge/HW02-Docker-2496ed?logo=docker" /></summary>
 
 > See [Dockerfile](Dockerfile).
 
 </details>
 
 <details>
-<summary>3️⃣ Kubernetes </summary>
+<summary><img src="https://img.shields.io/badge/HW03-Kubernetes-326ce5?logo=kubernetes" /></summary>
 
 ## 🚧 In progress
 
