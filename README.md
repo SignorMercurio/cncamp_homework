@@ -39,4 +39,18 @@ A simple HTTP server that you may:
 - `env` in `.github/workflows/gke.yml`
 - `secrets.GKE_PROJECT` and `secrets.GKE_SA_KEY` in `.github/workflows/gke.yml`
 
-</detail>
+</details>
+
+<details>
+<summary>2️⃣ Docker </summary>
+
+See [Dockerfile](Dockerfile).
+
+</details>
+
+<details>
+<summary>3️⃣ Kubernetes </summary>
+
+🚧 In progress
+
+</details>
