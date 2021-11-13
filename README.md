@@ -1,6 +1,7 @@
 # cncamp_homework
 
 <a href="https://github.com/SignorMercurio/cncamp_homework/actions"><img src="https://img.shields.io/github/workflow/status/SignorMercurio/cncamp_homework/Go?logo=GitHub" /></a>
+<a href="https://codecov.io/gh/SignorMercurio/limner"><img src="https://codecov.io/gh/SignorMercurio/limner/branch/main/graph/badge.svg?token=PKWZK3BR9R"/></a>
 
 <details>
 <summary>1️⃣ httpserver</summary>
