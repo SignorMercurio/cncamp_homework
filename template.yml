@@ -12,6 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: httpserver-config
+data:
+  graceTimeout: '15'
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,18 +44,28 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          lifecycle:
+            postStart:
+              exec:
+                command: ['/bin/sh', '-c', 'echo Starting httpserver...']
           readinessProbe: # no need for livenessProbe
             httpGet:
               scheme: HTTP
               path: /healthz
               port: 8080
             initialDelaySeconds: 3
-            periodSeconds: 10
+            periodSeconds: 5
           resources:
             requests:
               cpu: 100m
             limits:
               cpu: 100m
+          env:
+            - name: GRACE_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: httpserver-config
+                  key: graceTimeout
 ---
 apiVersion: v1
 kind: Service

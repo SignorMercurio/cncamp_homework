@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/SignorMercurio/cncamp_homework/httpserver"
@@ -28,7 +29,13 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 	<-c
 
-	timeout := time.Second * 15 // TODO: configurable
+	// from ConfigMap httpserver-config
+	graceTimeout, err := strconv.Atoi(os.Getenv("GRACE_TIMEOUT"))
+	if err != nil {
+		log.Println("Failed to read GRACE_TIMEOUT from env, default to 30s")
+		graceTimeout = 30
+	}
+	timeout := time.Second * time.Duration(graceTimeout)
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 

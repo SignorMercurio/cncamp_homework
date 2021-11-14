@@ -65,25 +65,31 @@ Build a multi-stage docker image for httpserver.
 
 ## Kubernetes
 
-Deploy httpserver on Kubernetes. Based on the first homework, I choose to deploy it on Google Kubernetes Engine.
+Deploy httpserver on Kubernetes. Based on the first homework, I would like to deploy it on Google Kubernetes Engine.
 
 ### Changes in httpserver
 
 - Deprecate `valyala/fasthttp`, use `net/http` and `gorilla/mux`
 - Add unit tests, coverage 100%
-- CI / CD with GitHub Actions
-  - CI: Codecov
-  - CD: Deploy to GKE
 - Add graceful termination when receiving SIGTERM
+- Add support for structured & leveled logging
+  - Deprecate `log`, use `uber-go/zap`
+  - Add a logging middleware
+  - Support structured & leveled logging
 
-### Features \| 🚧 In construction
+### Features - 🚧 In construction
 
-- [x] Add resource limit and request
-- [x] Add readiness probe
-- [x] <del>Add liveness probe</del> No need for liveness probe
-- [x] Add graceful termination (see httpserver source code)
-- [ ] Add graceful initialization with postStart
-- [ ] Add configurations with ConfigMap
-- [ ] Add support for leveled logging
+- [x] CI / CD with GitHub Actions
+  - [x] CI: Codecov
+  - [x] CD: Deploy to GKE
+- [x] Resource limit and request
+- [x] Health check
+  - [x] Readiness probe
+  - [x] <del>Liveness probe</del> No need for liveness probe
+- [x] Graceful initialization with postStart
+- [x] Graceful termination in httpserver source code
+- [x] Configurations with ConfigMap
+- [ ] Structured & leveled logging
+- [ ] Logs stored in a mounted volume
 
 </details>
