@@ -19,15 +19,14 @@ spec:
     spec:
       containers:
         - name: httpserver
-          image: server # gcr.io/PROJECT_ID/IMAGE:TAG
-          imagePullPolicy: IfNotPresent
+          image: gcr.io/PROJECT_ID/IMAGE:TAG
           ports:
             - containerPort: 8080
           lifecycle:
             postStart:
               exec:
                 command: ['/bin/sh', '-c', 'echo Starting httpserver...']
-          readinessProbe: # no need for livenessProbe
+          readinessProbe:
             httpGet:
               scheme: HTTP
               path: /healthz
@@ -37,8 +36,10 @@ spec:
           resources:
             requests:
               cpu: 100m
+              memory: 30Mi
             limits:
               cpu: 100m
+              memory: 50Mi
           env:
             - name: GRACE_TIMEOUT
               valueFrom:

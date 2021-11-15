@@ -17,10 +17,10 @@ A simple HTTP server that you may:
 
 ### Sample usage
 
-Start a server on `0.0.0.0:8000`:
+Start a server on `0.0.0.0:8080`:
 
 ```shell
-$ ./httpserver :8000
+$ ./httpserver :8080
 ```
 
 ### Note for Dockerfile
@@ -32,7 +32,7 @@ $ ./httpserver :8000
 
 ### Note for Google Cloud Platform
 
-- Running `gcloud --quiet auth configure-docker` requires the service account to have the permission to create bucket. `Storage Admin` role works, but it's clearly not the least
+- Running `gcloud --quiet auth configure-docker` requires the service account to have the permission to create bucket. For instance, `Storage Admin` role works, but it's clearly not the least
   privilege you can grant.
 - You'll need `Kubernetes Engine Developer` role for your service account.
 - `secrets.GKE_PROJECT`: GKE's Project ID
@@ -41,11 +41,12 @@ $ ./httpserver :8000
 ### Things to modify for a different golang app
 
 - Target binary name in `Dockerfile`
-- Entry command in `Dockerfile`
-- Everywhere `httpserver` appears in `template.yml`
-- (Optional) `kustomization.yml` to include other `.yml` representing Kubernetes resources
-- `env` in `.github/workflows/gke.yml`
-- `secrets.GKE_PROJECT` and `secrets.GKE_SA_KEY` in `.github/workflows/gke.yml`
+- Entrypoint command in `Dockerfile`
+- Kubernetes and kustomize yaml files in `base` directory
+- _Deploy to GKE_ workflow in `.github/workflows/gke.yml`
+  - `env`
+  - `secrets.GKE_PROJECT`
+  - `secrets.GKE_SA_KEY`
 
 </details>
 
