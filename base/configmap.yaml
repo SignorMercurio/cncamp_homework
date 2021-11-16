@@ -3,4 +3,6 @@ kind: ConfigMap
 metadata:
   name: httpserver-config
 data:
-  graceTimeout: '15'
+  GRACE_TIMEOUT: '15'
+  LOG_FILE: /logs/httpserver.log
+  LOG_LEVEL: INFO

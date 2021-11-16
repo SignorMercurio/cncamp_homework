@@ -9,18 +9,31 @@ import (
 	"time"
 
 	"github.com/SignorMercurio/cncamp_homework/httpserver"
+	"github.com/SignorMercurio/cncamp_homework/logger"
+	"go.uber.org/zap"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatalf("Usage: %s [listen address]", os.Args[0])
+	logger, err := logger.NewLogger()
+	if err != nil {
+		log.Fatalf("Failed to create logger: %s", err)
 	}
-	os.Setenv("VERSION", "1.2.0")
+	defer logger.Sync()
+	undo := zap.ReplaceGlobals(logger)
+	defer undo()
+	sugar := zap.S()
 
-	srv := httpserver.NewServer(os.Args[1])
+	if len(os.Args) != 2 {
+		sugar.Fatalf("Usage: %s [listen address]", os.Args[0])
+	}
+	os.Setenv("VERSION", "1.4.0")
+
+	addr := os.Args[1]
+	sugar.Debugw("Creating new server...", "address", addr)
+	srv := httpserver.NewServer(addr)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			log.Println(err)
+			sugar.Error(err)
 		}
 	}()
 
@@ -29,16 +42,26 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 	<-c
 
+	sugar.Debug("Received SIGTERM, gracefully terminating...")
 	// from ConfigMap httpserver-config
 	graceTimeout, err := strconv.Atoi(os.Getenv("GRACE_TIMEOUT"))
 	if err != nil {
-		log.Println("Failed to read GRACE_TIMEOUT from env, default to 30s")
 		graceTimeout = 30
+		sugar.Warnw(
+			"Failed to read GRACE_TIMEOUT from env, using default",
+			"default",
+			graceTimeout,
+		)
 	}
+	sugar.Debugw(
+		"Set graceful termination timeout successfully",
+		"timeout",
+		graceTimeout,
+	)
 	timeout := time.Second * time.Duration(graceTimeout)
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	srv.Shutdown(ctx)
-	log.Println("Shutting down...")
+	sugar.Info("Shutting down...")
 }

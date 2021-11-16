@@ -1,14 +1,16 @@
 package httpserver
 
 import (
-	"bytes"
 	"fmt"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/SignorMercurio/cncamp_homework/logger"
+	"go.uber.org/zap"
 )
 
 func checkStatusCode(got, expect int, t *testing.T) {
@@ -66,18 +68,18 @@ func TestWriteLog(t *testing.T) {
 	srv.ServeHTTP(w, r)
 
 	checkStatusCode(w.Code, http.StatusOK, t)
-	l := fmt.Sprintf("Time: %s; IP: %s; Status: %d\n", time.Now().Format(time.UnixDate), r.RemoteAddr, http.StatusOK)
+	l := fmt.Sprintf("Time: %s\nMethod: %s\nRequestURI: %s\nIP: %s\nStatus: %d", time.Now().Format(time.UnixDate), r.Method, r.RequestURI, r.RemoteAddr, http.StatusOK)
 	checkStrEqual("logs", w.Body.String(), l, t)
 }
 
-func TestHealthCheck(t *testing.T) {
+func TestHealthCheckWithLog(t *testing.T) {
 	r, err := http.NewRequest("GET", "/healthz", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	w := httptest.NewRecorder()
-	srv := http.HandlerFunc(healthCheck)
+	srv := loggingMiddleware(http.HandlerFunc(healthCheck))
 	srv.ServeHTTP(w, r)
 
 	checkStatusCode(w.Code, http.StatusOK, t)
@@ -112,11 +114,23 @@ func TestCatchAll(t *testing.T) {
 }
 
 func TestNewServer(t *testing.T) {
-	buf := new(bytes.Buffer)
-	log.SetOutput(buf)
+	// Init logger
+	logger, err := logger.NewLogger()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer logger.Sync()
+	undo := zap.ReplaceGlobals(logger)
+	defer undo()
 
 	NewServer(":8000")
-	if !strings.Contains(buf.String(), "Listening on :8000...") {
+
+	buf, err := ioutil.ReadFile("httpserver.log")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !strings.Contains(string(buf), `"msg":"Start Listening...","address":":8000"`) {
 		t.Error("Failed to start a new server")
 	}
 }

@@ -78,7 +78,7 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
   - Add a logging middleware
   - Support structured & leveled logging
 
-### Features - 🚧 In construction
+### Features
 
 - [x] CI / CD with GitHub Actions
   - [x] CI: Codecov
@@ -90,7 +90,7 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Graceful initialization with postStart
 - [x] Graceful termination in httpserver source code
 - [x] Configurations with ConfigMap
-- [ ] Structured & leveled logging
-- [ ] Logs stored in a mounted volume
+- [x] Structured & leveled logging
+- [x] Logs stored in a mounted volume
 
 </details>

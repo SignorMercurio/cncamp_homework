@@ -2,13 +2,13 @@ package httpserver
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
 )
 
 var (
@@ -32,13 +32,31 @@ func NewServer(addr string) *http.Server {
 	r.HandleFunc("/healthz", healthCheck)
 	r.HandleFunc("/", welcome)
 	r.PathPrefix("/").HandlerFunc(catchAll)
+	r.Use(loggingMiddleware)
 
-	log.Printf("Listening on %s...", addr)
+	zap.S().Infow("Start Listening...", "address", addr)
 
 	return &http.Server{
 		Addr:    addr,
 		Handler: r,
 	}
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		zap.S().Infow(
+			"Logged client access",
+			"Time",
+			time.Now().Format(time.UnixDate),
+			"Method",
+			r.Method,
+			"RequestURI",
+			r.RequestURI,
+			"IP",
+			r.RemoteAddr,
+		)
+		next.ServeHTTP(w, r)
+	})
 }
 
 func injectResquestHeaders(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +68,7 @@ func injectResquestHeaders(w http.ResponseWriter, r *http.Request) {
 
 func getEnv(w http.ResponseWriter, r *http.Request) {
 	v := os.Getenv("VERSION")
+	zap.S().Debugw("Read VERSION from env", "version", v)
 	if v == "" {
 		v = "0.0.0"
 	}
@@ -58,8 +77,8 @@ func getEnv(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeLog(w http.ResponseWriter, r *http.Request) {
-	l := fmt.Sprintf("Time: %s; IP: %s; Status: %d\n", time.Now().Format(time.UnixDate), r.RemoteAddr, http.StatusOK)
-	log.Println(l)
+	l := fmt.Sprintf("Time: %s\nMethod: %s\nRequestURI: %s\nIP: %s\nStatus: %d", time.Now().Format(time.UnixDate), r.Method, r.RequestURI, r.RemoteAddr, http.StatusOK)
+	zap.S().Debugw("Composed the current log", "log", l)
 	w.Write([]byte(l))
 }
 

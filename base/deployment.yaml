@@ -40,9 +40,13 @@ spec:
             limits:
               cpu: 100m
               memory: 50Mi
-          env:
-            - name: GRACE_TIMEOUT
-              valueFrom:
-                configMapKeyRef:
-                  name: httpserver-config
-                  key: graceTimeout
+          envFrom:
+            - configMapRef:
+                name: httpserver-config
+          volumeMounts:
+            - name: log-volume
+              mountPath: /logs
+      volumes:
+        - name: log-volume
+          emptyDir:
+            sizeLimit: 20Mi
