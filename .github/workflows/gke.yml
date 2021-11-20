@@ -21,7 +21,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: cluster-1
-  GKE_ZONE: us-central1-c
+  GKE_ZONE: asia-east1-a
   DEPLOYMENT_NAME: httpserver
   IMAGE: httpserver
 
