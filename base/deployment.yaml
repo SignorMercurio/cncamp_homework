@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: httpserver
-          image: gcr.io/PROJECT_ID/IMAGE:TAG
+          image: server #gcr.io/PROJECT_ID/IMAGE:TAG
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           lifecycle:

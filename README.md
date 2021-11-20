@@ -92,5 +92,6 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Configurations with ConfigMap
 - [x] Structured & leveled logging
 - [x] Logs stored in a mounted volume
+- [x] Ingress with HTTPS
 
 </details>
