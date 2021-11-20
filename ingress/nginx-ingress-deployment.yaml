@@ -382,10 +382,10 @@ spec:
             - name: webhook
               containerPort: 8443
               protocol: TCP
-          volumeMounts:
-            - name: webhook-cert
-              mountPath: /usr/local/certificates/
-              readOnly: true
+          # volumeMounts:
+          #   - name: webhook-cert
+          #     mountPath: /usr/local/certificates/
+          #     readOnly: true
           resources:
             requests:
               cpu: 100m
@@ -394,10 +394,10 @@ spec:
         kubernetes.io/os: linux
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
-      volumes:
-        - name: webhook-cert
-          secret:
-            secretName: ingress-nginx-admission
+      # volumes:
+      #   - name: webhook-cert
+      #     secret:
+      #       secretName: ingress-nginx-admission
 ---
 # Source: ingress-nginx/templates/controller-ingressclass.yaml
 # We don't support namespaced ingressClass yet
