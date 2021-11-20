@@ -21,7 +21,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: cluster-1
-  GKE_ZONE: us-central1-c
+  GKE_ZONE: asia-east1-a
   DEPLOYMENT_NAME: httpserver
   IMAGE: httpserver
 
@@ -75,6 +75,7 @@ jobs:
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
+          kubectl apply -f ingress/nginx-ingress-deployment.yaml
           cd base
           ../kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           ../kustomize build . | kubectl apply -f -

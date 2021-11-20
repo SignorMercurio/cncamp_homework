@@ -34,7 +34,7 @@ $ ./httpserver :8080
 
 - Running `gcloud --quiet auth configure-docker` requires the service account to have the permission to create bucket. For instance, `Storage Admin` role works, but it's clearly not the least
   privilege you can grant.
-- You'll need `Kubernetes Engine Developer` role for your service account.
+- You'll need `Kubernetes Engine Developer` / `Kubernetes Engine Admin` role for your service account.
 - `secrets.GKE_PROJECT`: GKE's Project ID
 - `secrets.GKE_SA_KEY`: Base64 encoded JSON key of your service account
 
@@ -92,5 +92,6 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Configurations with ConfigMap
 - [x] Structured & leveled logging
 - [x] Logs stored in a mounted volume
+- [x] Ingress with HTTPS
 
 </details>
