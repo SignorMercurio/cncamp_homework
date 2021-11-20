@@ -3,6 +3,8 @@
 <a href="https://github.com/SignorMercurio/cncamp_homework/actions"><img src="https://img.shields.io/github/workflow/status/SignorMercurio/cncamp_homework/Go?logo=GitHub" /></a>
 <a href="https://codecov.io/gh/SignorMercurio/cncamp_homework"><img src="https://codecov.io/gh/SignorMercurio/cncamp_homework/branch/main/graph/badge.svg?token=PKWZK3BR9R"/></a>
 
+[Demo (Temporary)](https://sigmerc.top)
+
 <details>
 <summary><img src="https://img.shields.io/badge/HW01-httpserver-4285f4?logo=google-chrome" /></summary>
 
