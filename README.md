@@ -88,7 +88,7 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Resource limit and request
 - [x] Health check
   - [x] Readiness probe
-  - [x] <del>Liveness probe</del> No need for liveness probe
+  - [x] Liveness probe
 - [x] Graceful initialization with postStart
 - [x] Graceful termination in httpserver source code
 - [x] Configurations with ConfigMap
@@ -97,3 +97,16 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Ingress with HTTPS
 
 </details>
+
+<details>
+<summary><img src="https://img.shields.io/badge/HW04-Prometheus-e6522c?logo=Prometheus" /></summary>
+
+## Prometheus | 🚧 In progress...
+
+Monitor httpserver with Prometheus and Grafana.
+
+### Changes in httpserver
+
+### Features
+
+</detail>
