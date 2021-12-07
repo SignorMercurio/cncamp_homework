@@ -144,10 +144,13 @@ Monitor httpserver with Loki, Prometheus and Grafana.
 To install [loki-stack](loki-stack) on Kubernetes v1.22+, we need to change `rbac.authorization.k8s.io/v1beta1` to `rbac.authorization.k8s.io/v1`. Therefore, manual installation is required:
 
 ```shell
+$ helm repo add grafana https://grafana.github.io/helm-charts
 $ helm pull grafana/loki-stack
 $ tar -xvf loki-stack-2.5.0.tgz
+
 $ cd loki-stack
 $ sed s#rbac.authorization.k8s.io/v1beta1#rbac.authorization.k8s.io/v1#g *.yaml
+
 $ helm upgrade --install loki ./loki-stack --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
 ```
 
