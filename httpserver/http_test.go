@@ -72,14 +72,14 @@ func TestWriteLog(t *testing.T) {
 	checkStrEqual("logs", w.Body.String(), l, t)
 }
 
-func TestHealthCheckWithLog(t *testing.T) {
+func TestHealthCheckWithMiddlewares(t *testing.T) {
 	r, err := http.NewRequest("GET", "/healthz", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	w := httptest.NewRecorder()
-	srv := loggingMiddleware(http.HandlerFunc(healthCheck))
+	srv := metricsMiddleware(loggingMiddleware(http.HandlerFunc(healthCheck)))
 	srv.ServeHTTP(w, r)
 
 	checkStatusCode(w.Code, http.StatusOK, t)

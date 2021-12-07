@@ -3,8 +3,6 @@
 <a href="https://github.com/SignorMercurio/cncamp_homework/actions"><img src="https://img.shields.io/github/workflow/status/SignorMercurio/cncamp_homework/Go?logo=GitHub" /></a>
 <a href="https://codecov.io/gh/SignorMercurio/cncamp_homework"><img src="https://codecov.io/gh/SignorMercurio/cncamp_homework/branch/main/graph/badge.svg?token=PKWZK3BR9R"/></a>
 
-[Demo (Temporary)](https://sigmerc.top)
-
 <details>
 <summary><img src="https://img.shields.io/badge/HW01-httpserver-4285f4?logo=google-chrome" /></summary>
 
@@ -96,17 +94,87 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 - [x] Logs stored in a mounted volume
 - [x] Ingress with HTTPS
 
+### Notes
+
+To deploy httpserver locally:
+
+1. Comment out `secret.yaml` and `ingress.yaml` in `base/kustomization.yml`, they're designed for GKE deployment:
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - configmap.yaml
+# - secret.yaml
+# - ingress.yaml
+```
+
+2. Replace container image in `base/deployment.yaml` with your local httpserver image, which can be built with:
+
+```shell
+$ docker build -t server:1.0.0 .
+```
+
 </details>
 
 <details>
 <summary><img src="https://img.shields.io/badge/HW04-Prometheus-e6522c?logo=Prometheus" /></summary>
 
-## Prometheus | 🚧 In progress...
+## Prometheus
 
-Monitor httpserver with Prometheus and Grafana.
+Monitor httpserver with Loki, Prometheus and Grafana.
 
 ### Changes in httpserver
 
+- Add random delay and Prometheus metrics in `metricsMiddleware`
+- Logs will also be written to stdout now to be collected by Loki
+
 ### Features
+
+- Collect metrics with Prometheus
+- Collect logs with Loki
+- View various metrics in both Prometheus and Grafana
+- View logs with Loki in Grafana
+
+### Notes
+
+To install [loki-stack](loki-stack) on Kubernetes v1.22+, we need to change `rbac.authorization.k8s.io/v1beta1` to `rbac.authorization.k8s.io/v1`. Therefore, manual installation is required:
+
+```shell
+$ helm pull grafana/loki-stack
+$ tar -xvf loki-stack-2.5.0.tgz
+$ cd loki-stack
+$ sed s#rbac.authorization.k8s.io/v1beta1#rbac.authorization.k8s.io/v1#g *.yaml
+$ helm upgrade --install loki ./loki-stack --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
+```
+
+### Demos
+
+#### View Cluster Dashboard in Grafana
+
+![View Cluster Dashboard in Grafana](images/Cluster.png)
+
+#### View Pod Dashboard in Grafana
+
+![View Pod Dashboard in Grafana](images/Pod.png)
+
+#### View Server Latency Sum in Prometheus
+
+![View Server Latency Sum in Prometheus](images/Prometheus.png)
+
+#### View Server Latency with Prometheus in Grafana
+
+![View Server Latency in Grafana](images/Grafana.png)
+
+#### View Server Events Count with Prometheus in Grafana
+
+![View Server Events Count with Prometheus in Grafana](images/PrometheusExplore.png)
+
+#### View Server Logs with Loki in Grafana
+
+![View Server Logs with Loki](images/Loki.png)
 
 </detail>

@@ -2,12 +2,15 @@ package httpserver
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/SignorMercurio/cncamp_homework/metrics"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )
 
@@ -24,14 +27,17 @@ var (
 )
 
 func NewServer(addr string) *http.Server {
+	metrics.Register()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/header", injectResquestHeaders)
 	r.HandleFunc("/version", getEnv)
 	r.HandleFunc("/log", writeLog)
 	r.HandleFunc("/healthz", healthCheck)
+	r.Handle("/metrics", promhttp.Handler())
 	r.HandleFunc("/", welcome)
 	r.PathPrefix("/").HandlerFunc(catchAll)
+	r.Use(metricsMiddleware)
 	r.Use(loggingMiddleware)
 
 	zap.S().Infow("Start Listening...", "address", addr)
@@ -40,6 +46,21 @@ func NewServer(addr string) *http.Server {
 		Addr:    addr,
 		Handler: r,
 	}
+}
+
+func randInt(min int, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return min + rand.Intn(max-min)
+}
+
+func metricsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		timer := metrics.NewTimer()
+		defer timer.ObserveTotal()
+		delay := randInt(10, 2000)
+		time.Sleep(time.Millisecond * time.Duration(delay))
+		next.ServeHTTP(w, r)
+	})
 }
 
 func loggingMiddleware(next http.Handler) http.Handler {

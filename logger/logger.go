@@ -14,6 +14,7 @@ func NewLogger() (*zap.Logger, error) {
 		logFile = "httpserver.log" // for testing
 	}
 	cfg.OutputPaths = []string{
+		"stdout",
 		logFile,
 	}
 
