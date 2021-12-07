@@ -150,6 +150,7 @@ $ tar -xvf loki-stack-2.5.0.tgz
 
 $ cd loki-stack
 $ sed s#rbac.authorization.k8s.io/v1beta1#rbac.authorization.k8s.io/v1#g *.yaml
+$ cd ..
 
 $ helm upgrade --install loki ./loki-stack --set grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
 ```
