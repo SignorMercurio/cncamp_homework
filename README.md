@@ -42,7 +42,7 @@ $ ./httpserver :8080
 
 - Target binary name in `Dockerfile`
 - Entrypoint command in `Dockerfile`
-- Kubernetes and kustomize yaml files in `base` directory
+- Kubernetes and kustomize yaml files in `gke` directory
 - _Deploy to GKE_ workflow in `.github/workflows/gke.yml`
   - `env`
   - `secrets.GKE_PROJECT`
@@ -96,27 +96,7 @@ Deploy httpserver on Kubernetes. Based on the first homework, I would like to de
 
 ### Notes
 
-To deploy httpserver locally:
-
-1. Comment out `secret.yaml` and `ingress.yaml` in `base/kustomization.yml`, they're designed for GKE deployment:
-
-```yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - deployment.yaml
-  - service.yaml
-  - configmap.yaml
-# - secret.yaml
-# - ingress.yaml
-```
-
-2. Replace container image in `base/deployment.yaml` with your local httpserver image, which can be built with:
-
-```shell
-$ docker build -t server:1.0.0 .
-```
+The `gke` directory is designed for deploying httpserver on GKE. To deploy on a local Kubernetes cluster, you should check out the `base` directory.
 
 </details>
 
@@ -196,6 +176,43 @@ Deploy httpserver with Istio Service Mesh.
 
 ### Features
 
-- [ ] Expose httpserver service with Istio Ingress Gateway
+- [x] Expose httpserver service with Istio Ingress Gateway
+- [x] HTTPS support
+- [x] L7 routing support
+- [x] Distributed Tracing
+
+### Notes
+
+#### Test with cURL
+
+To test the HTTPS-ready httpserver exposed with Istio Ingress Gateway, run:
+
+```shell
+$ curl --resolve "sigmerc.top:$INGRESS_SECURE_PORT:$INGRESS_HOST" https://sigmerc.top -k
+```
+
+On my own machine, it's like:
+
+```shell
+$ curl --resolve sigmerc.top:443:127.0.0.1 https://sigmerc.top -k
+```
+
+#### L7 routing
+
+In `base/virtualservice.yaml`:
+
+```yaml
+http:
+  - match:
+      - port: 443
+        # uri:
+        #   prefix: /version
+```
+
+You can uncomment `uri` and `prefix` lines, so that only access to `/version` is allowed. You can also use multiple `match` to make use of L7 routing.
+
+#### Distributed Tracing
+
+See [documentation](https://istio.io/latest/docs/tasks/observability/distributed-tracing/jaeger/) and follow the steps.
 
 </details>

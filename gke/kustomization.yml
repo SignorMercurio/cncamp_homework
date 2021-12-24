@@ -5,9 +5,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - configmap.yaml
-  - virtualservice.yaml
-  - secret.yaml
-  - gateway.yaml
-images:
-  - name: signormercurio/httpserver
-    newTag: 1.5.3
+  - secret-ingress.yaml
+  - ingress.yaml

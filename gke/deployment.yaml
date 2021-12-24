@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: httpserver
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+      labels:
+        app: httpserver
+    spec:
+      containers:
+        - name: httpserver
+          image: gcr.io/PROJECT_ID/IMAGE:TAG
+          ports:
+            - containerPort: 8080
+          lifecycle:
+            postStart:
+              exec:
+                command: ['/bin/sh', '-c', 'echo Starting httpserver...']
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 30Mi
+            limits:
+              cpu: 100m
+              memory: 50Mi
+          envFrom:
+            - configMapRef:
+                name: httpserver-config
+          volumeMounts:
+            - name: log-volume
+              mountPath: /logs
+      volumes:
+        - name: log-volume
+          emptyDir:
+            sizeLimit: 20Mi

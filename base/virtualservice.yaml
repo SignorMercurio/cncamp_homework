@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: httpserver-vs
+spec:
+  gateways:
+    - httpserver-gateway
+  hosts:
+    - sigmerc.top
+  http:
+    - match:
+        - port: 443
+          # uri:
+          #   prefix: /version
+      route:
+        - destination:
+            host: httpserver-service.default.svc.cluster.local
+            port:
+              number: 80

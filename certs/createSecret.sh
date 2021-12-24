@@ -1,0 +1,1 @@
+kubectl create -n istio-system secret tls httpserver-credential --key=sigmerc.top.key --cert=sigmerc.top.crt
