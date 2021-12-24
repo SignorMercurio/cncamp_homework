@@ -181,4 +181,21 @@ $ helm upgrade --install loki ./loki-stack --set grafana.enabled=true,prometheus
 
 ![View Server Logs with Loki](images/Loki.png)
 
-</detail>
+</details>
+
+<details>
+<summary><img src="https://img.shields.io/badge/HW05-Istio-466bb0?logo=Istio" /></summary>
+
+## Istio
+
+Deploy httpserver with Istio Service Mesh.
+
+### Changes in httpserver
+
+- Move version info to Config Map to automate version updating
+
+### Features
+
+- [ ] Expose httpserver service with Istio Ingress Gateway
+
+</details>
