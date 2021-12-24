@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: httpserver
-          image: gcr.io/PROJECT_ID/IMAGE:TAG
+          image: signormercurio/httpserver # gcr.io/PROJECT_ID/IMAGE:TAG
           ports:
             - containerPort: 8080
           lifecycle:

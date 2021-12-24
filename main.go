@@ -26,7 +26,6 @@ func main() {
 	if len(os.Args) != 2 {
 		sugar.Fatalf("Usage: %s [listen address]", os.Args[0])
 	}
-	os.Setenv("VERSION", "1.5.2")
 
 	addr := os.Args[1]
 	sugar.Debugw("Creating new server...", "address", addr)

@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: httpserver-config
 data:
+  VERSION: '1.5.3'
   GRACE_TIMEOUT: '15'
   LOG_FILE: /logs/httpserver.log
   LOG_LEVEL: INFO
